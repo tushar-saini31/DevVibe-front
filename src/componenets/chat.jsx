@@ -67,12 +67,19 @@ const Chat = () => {
       targetUserId,
       text: newMessage.trim(),
     });
-
     setNewMessage("");
   };
 
+  const handleKeyDown = (e) => {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();  // prevents newline
+   sendMessage();       // your existing send function
+  }
+};
+
+
   return (
-    <div className="w-2/3 mx-auto border-t border-gray-600 mt-25 h-[80vh] flex flex-col bg-gradient-to-r m-20 from-red-400 to-pink-500 rounded-2xl">
+    <div className="w-2/3 mx-auto border-t border-gray-600  h-[85vh] flex flex-col bg-gradient-to-r m-20 from-red-400 to-pink-500 rounded-2xl">
       <h1 className="p-5 border border-gray-600 text-xl font-bold ">Chat</h1>
 
       <div className="flex-1 overflow-scroll p-5">
@@ -99,6 +106,7 @@ const Chat = () => {
           onChange={(e) => setNewMessage(e.target.value)}
           className="flex-1 border border-gray-600 text-gray-900 rounded-2xl p-2"
           type="text"
+          onKeyDown={handleKeyDown}
         />
         <button onClick={sendMessage} className="btn btn-primary">
           Send

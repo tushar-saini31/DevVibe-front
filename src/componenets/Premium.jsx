@@ -1,6 +1,8 @@
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { useEffect, useState } from "react";
+import goldMember from "../assets/gold_member.png";
+import silverMember from "../assets/silver_member.png";
 
 const Premium = () => {
   const [isUserPremium, setIsUserPremium] = useState(false);
@@ -63,11 +65,11 @@ const Premium = () => {
   };
 
   return isUserPremium ? (
-    <div className="text-center text-3xl font-bold m-20 text-green-500">
+    <div className="text-center text-3xl font-bold m-20 text-green-500 ">
       You're already a Premium User 🎉
     </div>
   ) : (
-    <div className="flex flex-col h-screen  bg-amber-100">
+    <div className="flex flex-col min-h-screen w-full  bg-amber-100">
      <div className="flex justify-center p-5 mt-15">
         <h1 className="text-gray-500 font-medium text-7xl">Premium </h1>
     </div>
@@ -76,11 +78,7 @@ const Premium = () => {
         {/* Golden Membership */}
         <div className="card bg-amber-200 w-80 h-[500px] shadow-sm p-6">
           <figure className="px-10 pt-10">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRntfFCCzlPhiQmnhnjQ4CiHfdo4xs3wpfYVteyijEa6g&s&ec=72940542"
-              alt="golden"
-              className="rounded-xl"
-            />
+            <img src={goldMember} alt="golden" className="rounded-xl" />
           </figure>
           <div className="card-body text-center text-black">
             <h2 className="text-xl font-bold">Golden Member</h2>
@@ -102,11 +100,7 @@ const Premium = () => {
         {/* Silver Membership */}
         <div className="card bg-gray-200 w-80 h-[500px] shadow-sm p-6">
           <figure className="px-10 pt-10">
-            <img
-              src="https://machine-world.net/wp-content/uploads/2023/04/Silver.png"
-              alt="silver"
-              className="rounded-xl"
-            />
+             <img src={silverMember} alt="silver" className="rounded-xl" />
           </figure>
           <div className="card-body text-center text-black">
             <h2 className="text-xl font-bold">Silver Member</h2>

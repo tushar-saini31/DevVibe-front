@@ -1,9 +1,8 @@
-import { useState } from "react";
-import { useLocation } from "react-router-dom"; // ✅ Import useLocation
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { addUser } from "../utils/userSlice";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
 
 const Login = () => {
@@ -16,7 +15,18 @@ const Login = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation(); // ✅ Get current route
+  const location = useLocation();
+
+  // Show signup if Navbar passes state
+useEffect(() => {
+  // Show login by default
+  if (location.state?.showSignup) {
+    setIsLoginForm(false);
+  } else {
+    setIsLoginForm(true);
+  }
+}, [location.key, location.state]);
+
 
   const handleSignUp = async () => {
     if (!firstName.trim() || !lastName.trim() || !email.trim() || !password.trim()) {
@@ -58,15 +68,21 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-cover bg-center"
+    <div
+      className="min-h-screen flex items-center justify-center bg-cover bg-center"
       style={{
         backgroundImage:
           "url('https://cdn-ilajckf.nitrocdn.com/utLabjbGVjpaYDQkazoKnooguTzYeQRR/assets/images/optimized/rev-86d95f4/tamediacdn.techaheadcorp.com/wp-content/uploads/2022/02/16051143/MicrosoftTeams-image-38-1.png')",
-      }}>
+      }}
+    >
       <div className="flex justify-center my-10">
-        <div className="bg-gray-900/40 backdrop-blur-md shadow-lg border border-gray-700 p-8 rounded-xl w-96 text-center">
-          <h2 className="text-white text-2xl font-bold mb-4">{isLoginForm ? "Login" : "Sign Up"}</h2>
-
+        <div className="bg-gray-500/60 backdrop-blur-sm shadow-lg border border-gray-500 p-8 rounded-xl w-96 text-center">
+          <h2 className="text-white text-2xl font-bold mb-4">
+            {isLoginForm ? "Login" : "Sign Up"}
+          </h2>
+          <form onSubmit={isLoginForm ? handleLogin : handleSignUp} // ✅ handles Enter key
+          >
+          {/* Signup fields */}
           {!isLoginForm && (
             <>
               <div className="p-2">
@@ -92,6 +108,7 @@ const Login = () => {
             </>
           )}
 
+          {/* Email & Password */}
           <div className="p-2">
             <input
               type="email"
@@ -116,6 +133,7 @@ const Login = () => {
 
           {error && <p className="text-red-500">{error}</p>}
 
+          {/* Submit button */}
           <div className="mt-4">
             <button
               className="w-40 p-2 bg-purple-600 text-white rounded-lg"
@@ -124,9 +142,15 @@ const Login = () => {
               {isLoginForm ? "Login" : "Sign Up"}
             </button>
           </div>
-
-          <p className="text-blue-400 cursor-pointer mt-2" onClick={() => setIsLoginForm(!isLoginForm)}>
-            {isLoginForm ? "Don't have an account yet?" : "Have an account already?"}
+         </form>
+          {/* Toggle form link */}
+          <p
+            className="text-blue-400 cursor-pointer mt-2"
+            onClick={() => setIsLoginForm(!isLoginForm)}
+          >
+            {isLoginForm
+              ? "Don't have an account yet?"
+              : "Have an account already?"}
           </p>
         </div>
       </div>

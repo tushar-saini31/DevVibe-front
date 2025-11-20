@@ -1,59 +1,84 @@
-import { Navigate, Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./footer";
-import { useDispatch } from "react-redux";
-import { BASE_URL } from "../utils/constants";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { addUser } from "../utils/userSlice";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { BASE_URL } from "../utils/constants";
 
 const Body = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const userData = useSelector((store) => store.user);
+  const location = useLocation();
+  const user = useSelector((store) => store.user);
 
   const fetchUser = async () => {
-    if (userData) return;
     try {
-      const res = await axios.get(BASE_URL + "/profile/view", {
+      const res = await axios.get(`${BASE_URL}/profile/view`, {
         withCredentials: true,
       });
       dispatch(addUser(res.data));
     } catch (err) {
-      if (err.status === 401) {
-        navigate("/login");
-      }
-      console.log(err);
+      console.log("Not logged in");
     }
   };
 
   useEffect(() => {
-    fetchUser();
-  }, []);
+    if (location.pathname !== "/login" && location.pathname !== "/signup") {
+      fetchUser();
+    }
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (user && location.pathname === "/") {
+      navigate("/feed", { replace: true });
+    }
+  }, [user, location.pathname]);
+
+  const isAuthPage =
+    location.pathname === "/login" || location.pathname === "/signup";
 
   return (
-    <div className="relative min-h-screen">
-      {/* Background Image Layer */}
-      <div
-        className="absolute inset-0 bg-cover bg-center z-0"
-        style={{
-          backgroundImage: "url('https://gagadget.com/media/post_big/Tinder_Header.jpg')",
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "top center",
-        }}
-      >
-        {/* Dark Overlay */}
-        <div className="absolute inset-0 bg-black opacity-60"></div>
-      </div>
+    <div className="relative min-h-screen w-full flex flex-col">
+      {/* Base background gradient for all non-auth pages */}
+      {!isAuthPage && (
+        <div className="absolute inset-0 w-full h-full z-0 bg-gradient-to-r from-pink-500 via-rose-400 to-orange-400 animate-gradient"></div>
+      )}
 
-      {/* Foreground Content */}
-      <div className="relative z-10 flex flex-col min-h-screen">
-        <main className="flex-grow">
-          <Navbar />
-          <Outlet />
+      {/* Auth page background */}
+      {isAuthPage && (
+        <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-pink-500 via-rose-400 to-orange-400 animate-gradient z-0"></div>
+      )}
+
+      {/* Watermark for auth pages */}
+      {isAuthPage && (
+        <div className="absolute inset-0 flex p-20 justify-center text-center z-0">
+          <div className="text-amber-800 text-[10rem] font-extrabold opacity-15 select-none pointer-events-none leading-[1.1]">
+            <div>Connect</div>
+            <div>with</div>
+            <div>DevVibe</div>
+          </div>
+        </div>
+      )}
+
+      {/* Foreground */}
+      <div className="relative z-10 flex flex-col flex-grow min-h-screen w-full">
+        <Navbar />
+
+        {/* Main content with subtle grey background behind cards */}
+        <main className="relative flex-grow flex items-center justify-center p-3 w-full">
+          {/* Grey layer (only for non-auth pages) */}
+          {!isAuthPage && (
+            <div className="absolute inset-0 bg-gray-900 backdrop-blur-sm rounded-3xl shadow-lg max-w-3xl mx-auto z-0 h-185"></div>
+          )}
+
+          {/* Actual page content */}
+          <div className="relative w-full max-w-6xl z-10">
+            <Outlet />
+          </div>
         </main>
+
         <Footer />
       </div>
     </div>

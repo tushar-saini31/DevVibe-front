@@ -32,7 +32,9 @@ const Connections = () => {
   if (loading) return <Shimmer />;
 
   if (!connections || !Array.isArray(connections)) {
-    return <h1 className="text-white text-xl text-center mt-10">Loading...</h1>;
+    return (
+      <h1 className="text-white text-xl text-center mt-10">Loading...</h1>
+    );
   }
 
   if (connections.length === 0) {
@@ -40,7 +42,9 @@ const Connections = () => {
       <div className="min-h-screen bg-yellow-400 flex flex-col items-center justify-center p-4">
         <h1 className="text-4xl font-bold text-white mb-6">Connections</h1>
         <div className="bg-red-400 rounded-xl shadow-xl p-8 text-center max-w-md w-full">
-          <h2 className="text-2xl font-semibold text-white mb-4">No Connections Found</h2>
+          <h2 className="text-2xl font-semibold text-white mb-4">
+            No Connections Found
+          </h2>
           <p className="text-white mb-6">Try searching for new connections!</p>
           <button
             onClick={() => navigate("/")}
@@ -55,20 +59,20 @@ const Connections = () => {
 
   // ✅ Render scrollable container of connection cards
   return (
-    <div
-      className="min-h-screen bg-cover bg-center flex justify-center items-start pt-24"
-      style={{
-        backgroundImage:
-          "url('https://www-cms.pipedriveassets.com/blog-assets/manage-your-dating-pipeline.png')",
-      }}
-    >
-      <div className="bg-opacity-50 backdrop-blur-md w-[90%] max-w-xl shadow-xl">
-        <h1 className="font-bold text-3xl text-white mb-6 text-center">Connections</h1>
+    <div className="min-h-screen bg-cover bg-center flex justify-center items-start pt-24">
+      <div
+        className="bg-opacity-50 backdrop-blur-md w-[90%] max-w-xl rounded-2xl p-6
+                   shadow-[0_0_25px_rgba(255,0,0,0.5)] border border-amber-300 transition-all duration-300"
+      >
+        <h1 className="font-bold text-3xl text-white mb-6 text-center">
+          Connections
+        </h1>
 
         {/* Scrollable Wrapper */}
         <div className="h-[460px] overflow-y-auto space-y-4 pr-2 scrollbar-hide">
           {connections.map((connection) => {
-            const { _id, firstName, lastName, photoUrl, age, gender, about } = connection;
+            const { _id, firstName, lastName, photoUrl, age, gender, about } =
+              connection;
 
             return (
               <div
@@ -89,7 +93,9 @@ const Connections = () => {
                       {age}, {gender}
                     </p>
                   )}
-                  <p className="text-white/80 text-sm">{about || "No bio available."}</p>
+                  <p className="text-white/80 text-sm">
+                    {about || "No bio available."}
+                  </p>
                 </div>
                 <Link to={"/chat/" + _id} className="ml-auto">
                   <button className="btn btn-primary">Message</button>
